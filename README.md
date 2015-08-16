@@ -63,7 +63,7 @@ You can define controllers with route params, for example:
 
 ```js
 module.exports = {
-    // GET mthod
+    // GET method
     get: {
         // /users/list/:param_name
         list: function(req, res, param_name){
