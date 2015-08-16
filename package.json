@@ -4,7 +4,9 @@
   "description": "express controllers for easy routing",
   "main": "index.js",
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "express": "^4.13.3"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
