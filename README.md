@@ -22,25 +22,22 @@ app.listen(3000);
 >controllers/usersController.js
 ```js
 module.exports = {
+    // GET method
     get: {
+        // GET: /users/list
         list: function(req, res){
             res.end("Hello World");
         }
     },
+    // POST method
     post: {
+        // POST: /users/save
         save: function(req, res){
             res.json(req.body);
         }
     }
 }
 ```
-Above will result:
-
-GET: /users/list
->Hello World
-
-And POST: /users/save
->{key: "value"}
 
 **The route will be built according to the following structure**
 
@@ -49,7 +46,7 @@ And POST: /users/save
 * base_path has default to: `/`
 * controller_name is substracted from controller file name: `[controller_name]Controller.js`
 
-**How to change base_path**
+**How to define base_path**
 ```js
 var base_path = "api";
 kubrickController(app).bind(__dirname + "/controllers", base_path);
@@ -65,7 +62,9 @@ You can define controllers with route params, for example:
 
 ```js
 module.exports = {
+    // GET mthod
     get: {
+        // /users/list/:param_name
         list: function(req, res, param_name){
             res.end(param_name);
         }
@@ -73,14 +72,4 @@ module.exports = {
 }
 ```
 
-Above will result
->GET: /users/list/:param_name
-
-If you call the next route:
-
->GET: /users/list/HelloWorld
-
-Will Result to:
-
->HelloWorld
 
