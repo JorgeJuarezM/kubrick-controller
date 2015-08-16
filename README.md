@@ -20,6 +20,7 @@ app.listen(3000);
 ### Creating Controllers
 #### Simple way
 >controllers/usersController.js
+
 ```js
 module.exports = {
     // GET method
