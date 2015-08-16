@@ -55,7 +55,7 @@ kubrickController(app).bind(__dirname + "/controllers", base_path);
 Above will result `/api/[controller_name]/[method_key]`
 
 
-##Route Params
+### Route Params
 
 You can define controllers with route params, for example:
 
