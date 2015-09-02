@@ -73,7 +73,7 @@ module.exports = function(app) {
                             if(process.env.log){
                                 console.log("binding [%s]  %s (v%s)", method, action_path, version);
                             }
-                            app[method](action_path, function(req, res) {
+                            app[method](action_path, midlewares, function(req, res) {
                                 req.controllerName = controllerKey;
                                 var action_params = [req, res];
                                 for (var k in req.params) {
