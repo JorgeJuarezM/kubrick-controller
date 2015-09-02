@@ -34,10 +34,16 @@ module.exports = function(app) {
                 var controller_name = ctrl.replace("Controller.js", "").toSnake();
                 var controllerKey = ctrl.toPascal();
 
-                for (var method in controller) {
-                    var controller_method = controller[method];
+                
+                
+                var bindMethods = function(method, controller_method, version){
                     for (var action_controller in controller_method) {
                         var action_fn = controller_method[action_controller];
+                        var midlewares = [];
+                        if(Array.isArray(action_fn)){
+                            midlewares = action_fn;
+                            action_fn = midlewares.pop();
+                        }
                         var params = action_fn.toString().replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "").match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m)[1].split(",");
 
                         if (params.length < 2) {
@@ -54,12 +60,19 @@ module.exports = function(app) {
 
 
                         var action_path = path.join("/", (base_path || "/"), module, action).replace(/\/$/g, "");
-                        params.forEach(function(p) {
-                            action_path = path.join(action_path, "/:" + p);
-                        });
+                        if(action_path.length == 0) action_path = "/";
+                        
+                        if(version == 1){
+                            params.forEach(function(p) {
+                                action_path = path.join(action_path, "/:" + p);
+                            });
+                        }
 
 
                         try{
+                            if(process.env.log){
+                                console.log("binding [%s]  %s (v%s)", method, action_path, version);
+                            }
                             app[method](action_path, function(req, res) {
                                 req.controllerName = controllerKey;
                                 var action_params = [req, res];
@@ -72,6 +85,20 @@ module.exports = function(app) {
                             throw e;
                         }
 
+                    }
+                }
+                
+                for (var method in controller) {
+                    var controller_methods = controller[method];
+                    if(["post", "get", "delete", "put", "patch"].indexOf(method) > -1){
+                        bindMethods(method, controller_methods, 1);
+                    }else{
+                        var action = method;
+                        for(var method in controller_methods){
+                            var tmp_action = {};
+                            tmp_action[action] = controller_methods[method];
+                            bindMethods(method, tmp_action, 2);
+                        }
                     }
                 }
             });
