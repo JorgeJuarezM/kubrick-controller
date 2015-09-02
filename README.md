@@ -23,6 +23,16 @@ app.listen(3000);
 
 ```js
 module.exports = {
+    index: {
+        // this will be transtaled to get("/users/")
+        get: function(req, res){
+            res.end("This is a index of Users");
+        },
+        // this will be translated to post("/users/");
+        post: function(req, res){
+            res.end("This is a post for index of Users");
+        }
+    }
     // GET method
     get: {
         // GET: /users/list
@@ -65,12 +75,45 @@ You can define controllers with route params, for example:
 module.exports = {
     // GET method
     get: {
-        // /users/list/:param_name
+        /**
+        * this will be translated to get("/users/list/:param_name")
+        * this feaure will be deprecated in the next major versions
+        */
         list: function(req, res, param_name){
             res.end(param_name);
+        }
+    },
+    /**
+    * Since Version 1.2.1, you can define params in the route
+    * this will be translated to get("/users/:user_id/profiles")
+    * params will be added to end of arguments automatically
+    * this feature is not supported in older versions
+    */
+    "/:user_id/profiles": {
+        get: {
+            function(req, res, user_id){
+                res.end(user_id);
+            }
         }
     }
 }
 ```
 
+### Middlewares
 
+To use midlewares is very simple. Just use an Array!
+
+```js
+    // File: usersController.js
+    module.exports = {
+        // this will be translated to get("/users/list");
+        list: {
+            get: [function Middleware(req, res, next){
+                console.log("this is a middleware!");
+                next();
+            }, function(req, res){
+                res.end("Middleware has been executed");
+            }]
+        }
+    };
+```
